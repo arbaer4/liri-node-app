@@ -11,6 +11,8 @@ var keys = require("./keys.js");
 //file systems required
 var fs = require("fs");
 
+var moment = require('moment');
+
 // const chalk = require ('chalk');
 
 
@@ -67,8 +69,9 @@ userRequest(x, command);
 //SPOTIFY
 //============================================================================
 function spotifyThis(song){
-    
-
+  if (process.argv[3] == undefined && x === ""){
+    song = "The Sign Ace of Base";
+  }
 
     spotify.search({ type: 'track', query: song, limit: 1}, function(error, data){
       if(!error){
@@ -86,8 +89,9 @@ function spotifyThis(song){
           
         }
        
-      } else{
-        cconsole.log("Error", error.message);
+      } 
+      else{
+        console.log("Error", error.message);
       }
       
     });
@@ -190,8 +194,8 @@ console.log(x);
          function(response) {
              console.log("Name of Venue: " + response.data[0].venue.name);
              console.log("Venue Location: " + response.data[0].venue.city + ", " + response.data[0].venue.region);
-             console.log("Date of the Event: " + response.data[0].datetime);
-            
+             console.log("Date of the Event: " + moment(response.data[0].datetime).format("MM/DD/YYYY"));  
+                    
          })
     
     
@@ -216,3 +220,30 @@ console.log(x);
         console.log(error.config);
       });
     }
+
+    //FS node package
+function doWhatItSays(){
+  fs.readFile("random.txt", "utf8", function(error, data) {
+
+    // If the code experiences any errors it will log the error to the console.
+    if (error) {
+      return console.log(error);
+    }
+  
+    // We will then print the contents of data
+    console.log(data);
+  
+    // Then split it by commas (to make it more readable)
+    var dataArr = data.split(",");
+    command = dataArr[0]; 
+    console.log(dataArr[0]);
+    x = dataArr[1];
+    console.log(dataArr[1]);
+    userRequest(x, command);
+  
+    // We will then re-display the content as an array for later use.
+    console.log(dataArr);
+
+  
+  });
+}
